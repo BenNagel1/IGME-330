@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap" rel="stylesheet">
+    <title>Greeter</title>
+    <style>
+      *{font-size:1.5em;}
+
+      #btn-hello, #btn-goodbye
+      {
+        height: 50px;
+        width: 150px;
+        font-size: 14pt;
+      }
+
+      #input-firstname, #input-lastname
+      {
+        height: 65px;
+        width: 500px;
+        font-size: 18pt;
+      }
+
+      #options{
+        font-family: "Dosis", serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        font-style: normal;
+        font-size: 14pt;
+        padding-top: 25px;
+      }
+
+      @media screen and (min-width: 1024px){
+        body{
+          background-color: red;
+          padding: 100px;
+        }
+      }
+    </style>
+
+  <script>
+    "use strict";
+
+    //checks shoutify state
+    let shoutifyChecked = false;
+
+    //sets up buttons and checkbox
+    const init = () => {
+      document.querySelector("#btn-hello").onclick = () => greet("Hello");
+      document.querySelector("#btn-goodbye").onclick = () => greet("Goodbye");
+      document.querySelector("#shoutify").onchange = () => shoutifyChecked = !shoutifyChecked;
+    }
+
+    //says hello or goodbye to a name
+    const greet = (greeting) => {
+        //gets first and last name values from text boxes
+        let firstName = document.querySelector("#input-firstname").value;
+        let lastName = document.querySelector("#input-lastname").value;
+
+        //sets default names if none are input
+        if(!firstName) { firstName = "Peter" };
+        if(!lastName) { lastName = "Parker" };
+
+        //makes output capitalized
+        if(shoutifyChecked) { greeting = greeting.toUpperCase(); firstName = firstName.toUpperCase(); lastName = lastName.toUpperCase(); }
+
+        //makes text red and background yellow
+        document.querySelector("#output").innerText = `${greeting} ${firstName} ${lastName}`;
+        const output = document.querySelector("#output");
+        output.style.color = "red";
+        output.style.backgroundColor = "yellow";
+    }
+
+    //loads javascript after
+    window.onload = init;
+
+    </script>
+  </head>
+<body>
+  <button id="btn-hello">Say Hello!</button>
+  <button id="btn-goodbye">Say Goodbye!</button>
+  <div id="options">
+    <input type="checkbox" id="shoutify" name="Shoutify"/>
+    <label for="shoutify">Shoutify</label>
+  </div><br>
+  <input id="input-firstname" placeholder="Type in your first name">
+  <input id="input-lastname" placeholder="Type in your last name">
+  <p id="output">???</p>
+</body>
+</html>
