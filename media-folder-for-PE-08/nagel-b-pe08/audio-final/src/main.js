@@ -7,6 +7,7 @@
 // In this instance, we feel the code is more readable if written this way
 // If you want to re-write these as ES6 arrow functions, to be consistent with the other files, go ahead!
 
+import { fetchData } from "./dataFetcher.js";
 import * as audio from './audio.js';
 import * as utils from './utils.js';
 import * as canvas from './canvas.js';
@@ -19,23 +20,37 @@ const drawParams = {
     showInvert: false,
     showEmboss: false,
     toggleLowshelf: false,
-    toggleDistortion: false
+    toggleHighshelf: false
 };
 
-// 1 - here we are faking an enumeration
-const DEFAULTS = Object.freeze({
-    sound1: "./media/New Adventure Theme.mp3"
-});
+let title;
+let tracks;
+let bassValue;
+let trebleValue;
+
+fetchData('./data/av-data.json', (titleData) => title = titleData, (trackData) => tracks = trackData, (bassData) => bassValue = bassData, (trebleData) => trebleValue = trebleData);
 
 const init = () => {
+    document.title = title;
+    document.querySelector("#title").innerHTML = title;
+
+    const trackNames = Object.values(tracks).map(track => track.trackName);
+    
+    document.querySelector('#data-list').innerHTML = `<ul>${trackNames.map(w => `<li>${w}</li>`).join("")}</ul>`;
+    
     audio.setupWebaudio(DEFAULTS.sound1);
-    console.log("init called");
-    console.log(`Testing utils.getRandomColor() import: ${utils.getRandomColor()}`);
+    //console.log("init called");
+    //console.log(`Testing utils.getRandomColor() import: ${utils.getRandomColor()}`);
     let canvasElement = document.querySelector("canvas"); // hookup <canvas> element
     setupUI(canvasElement);
     canvas.setupCanvas(canvasElement, audio.analyserNode);
     loop();
 }
+
+// 1 - here we are faking an enumeration
+const DEFAULTS = Object.freeze({
+    sound1: "./media/New Adventure Theme.mp3"
+});
 
 const setupUI = (canvasElement) => {
     // A - hookup fullscreen button
@@ -51,13 +66,13 @@ const setupUI = (canvasElement) => {
     const playButton = document.querySelector("#btn-play");
 
     playButton.onclick = e => {
-        console.log(`audioCtx.state before = ${audio.audioCtx.state}`);
+        //console.log(`audioCtx.state before = ${audio.audioCtx.state}`);
 
         //check if context is in suspended state (autoplay policy)
         if (audio.audioCtx.state == "suspended") {
             audio.audioCtx.resume();
         }
-        console.log(`audioCtx.state after = ${audio.audioCtx.state}`);
+        //console.log(`audioCtx.state after = ${audio.audioCtx.state}`);
         if (e.target.dataset.playing == "no") {
             //if track is currently paused, play it
             audio.playCurrentSound();
@@ -104,7 +119,7 @@ const setupUI = (canvasElement) => {
     document.querySelector("#cb-invert").checked = drawParams.showInvert;
     document.querySelector("#cb-emboss").checked = drawParams.showEmboss;
     document.querySelector("#cb-lowshelf").checked = drawParams.toggleLowshelf;
-    document.querySelector("#cb-distortion").checked = drawParams.toggleDistortion;
+    document.querySelector("#cb-highshelf").checked = drawParams.toggleHighshelf;
 
     //changes drawParams to state of checkbox on click
     document.querySelector("#cb-gradient").onclick = (e) => { drawParams.showGradient = e.target.checked };
@@ -113,22 +128,35 @@ const setupUI = (canvasElement) => {
     document.querySelector("#cb-noise").onclick = (e) => { drawParams.showNoise = e.target.checked };
     document.querySelector("#cb-invert").onclick = (e) => { drawParams.showInvert = e.target.checked };
     document.querySelector("#cb-emboss").onclick = (e) => { drawParams.showEmboss = e.target.checked };
-    document.querySelector("#cb-lowshelf").onclick = (e) => { drawParams.toggleLowshelf = e.target.checked; /*toggleLowshelf();*/ };
-    document.querySelector("#cb-distortion").onclick = (e) => { drawParams.toggleDistortion = e.target.checked };
+    document.querySelector("#cb-lowshelf").onclick = (e) => { drawParams.toggleLowshelf = e.target.checked; toggleLowshelf(); };
+    document.querySelector("#cb-highshelf").onclick = (e) => { drawParams.toggleHighshelf = e.target.checked; toggleHighshelf(); };
 } // end setupUI
 
+
 const toggleLowshelf = () => {
+    
     if(drawParams.toggleLowshelf){
-      lowShelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
-      lowShelfBiquadFilter.gain.setValueAtTime(15, audioCtx.currentTime);
+        audio.lowBiquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+        audio.lowBiquadFilter.gain.setValueAtTime(bassValue, audio.audioCtx.currentTime);
     }else{
-      lowShelfBiquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+        audio.lowBiquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
     }
-  }
+}
+
+const toggleHighshelf = () => {
+    
+    if(drawParams.toggleHighshelf){
+        audio.highBiquadFilter.frequency.setValueAtTime(1000, audio.audioCtx.currentTime);
+        audio.highBiquadFilter.gain.setValueAtTime(trebleValue, audio.audioCtx.currentTime);
+    }else{
+        audio.highBiquadFilter.gain.setValueAtTime(0, audio.audioCtx.currentTime);
+    }
+}
 
 const loop = () => {
     /* NOTE: This is temporary testing code that we will delete in Part II */
-    requestAnimationFrame(loop);
+    setTimeout(loop, 1000 / 60);
+
     canvas.draw(drawParams);
 
 

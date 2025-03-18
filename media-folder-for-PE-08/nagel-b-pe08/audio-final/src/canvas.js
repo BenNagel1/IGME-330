@@ -11,6 +11,39 @@ import * as utils from './utils.js';
 
 let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
+class EllipseSprite {
+    constructor(x, y, width, height, fill, stroke, wave) {
+        //console.log(`${this.constructor.type} created`);
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        //this.radius = radius;
+        this.fill = fill;
+        this.stroke = stroke;
+        this.wave = wave;
+    }
+
+    update(waveX, waveY) {
+        this.x = waveX;
+        this.y = waveY;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = this.fill;
+        ctx.strokeStyle = this.stroke;
+        ctx.lineWidth = 5;
+        ctx.ellipse(this.x, this.y, this.width, this.height, Math.PI / 2, 0, 2 * Math.PI)
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        ctx.restore();
+    }
+}
+
+let sprites = [];
 
 const setupCanvas = (canvasElement, analyserNodeRef) => {
     // create drawing context
@@ -18,11 +51,14 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
     canvasWidth = canvasElement.width;
     canvasHeight = canvasElement.height;
     // create a gradient that runs top to bottom
-    gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight, [{ percent: 0, color: "darkgray" }, { percent: .5, color: "gray" }, { percent: 1, color: "black" }]);
+    gradient = utils.getLinearGradient(ctx, 0, 0, 0, canvasHeight, [{ percent: 0, color: "#1F214D" }, { percent: .5, color: "#BF3475" }, { percent: 1, color: "#EE6C45" }]);
     // keep a reference to the analyser node
     analyserNode = analyserNodeRef;
     // this is the array where the analyser data will be stored
     audioData = new Uint8Array(analyserNode.fftSize / 2);
+
+    sprites[0] = new EllipseSprite(100, 100, 25, 50, "red", "darkred", 20);
+    sprites[1] = new EllipseSprite(100, 100, 25, 50, "lime", "green", 70);
 }
 
 const draw = (params = {}) => {
@@ -48,26 +84,6 @@ const draw = (params = {}) => {
         ctx.restore();
     }
 
-    // 4 - draw bars
-    if (params.showBars) {
-        let barSpacing = 4;
-        let margin = 5;
-        let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
-        let barWidth = screenWidthForBars / audioData.length;
-        let barHeight = 200;
-        let topSpacing = 100;
-
-        ctx.save();
-        ctx.fillStyle = `rgba(255, 255, 255, 0.5)`;
-        ctx.strokeStyle = `rgba(0, 0, 0, 0.5)`;
-        //loop through the data and draw
-        for (let i = 0; i < audioData.length; i++) {
-            ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
-            ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
-        }
-        ctx.restore();
-    }
-
     // 5 - draw circles
     if (params.showCircles) {
         let maxRadius = canvasHeight / 4;
@@ -80,28 +96,72 @@ const draw = (params = {}) => {
 
             let circleRadius = percent * maxRadius;
             ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(255, 111, 111, .34 - percent / 3.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI, false);
+            ctx.fillStyle = utils.makeColor(200, 200, 0, .34 - percent / 3.0);
+            ctx.arc(canvasWidth / 2, canvasHeight / 3, circleRadius, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
 
             //blue-ish circles, bigger, more transparent
             ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(0, 0, 255, .10 - percent / 10.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 1.5, 0, 2 * Math.PI, false);
+            ctx.fillStyle = utils.makeColor(200, 150, 0, .10 - percent / 10.0);
+            ctx.arc(canvasWidth / 2, canvasHeight / 3, circleRadius * 1.5, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
 
             //yellow-ish circles, smaller
-            ctx.save();
             ctx.beginPath();
-            ctx.fillStyle = utils.makeColor(200, 200, 0, .5 - percent / 5.0);
-            ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * .50, 0, 2 * Math.PI, false);
+            ctx.fillStyle = utils.makeColor(200, 250, 0, .5 - percent / 5.0);
+            ctx.arc(canvasWidth / 2, canvasHeight / 3, circleRadius * .50, 0, 2 * Math.PI, false);
             ctx.fill();
             ctx.closePath();
-            ctx.restore();
+        }
+
+        ctx.restore();
+    }
+
+    // 4 - draw bars
+    if (params.showBars) {
+        let barSpacing = 4;
+        let margin = 5;
+        let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
+        let barWidth = screenWidthForBars / audioData.length * 2;
+        let barHeight = 350;
+        let topSpacing = 150;
+
+        ctx.save();
+        //ctx.fillStyle = `rgba(255, 255, 255, 0.5)`;
+        ctx.strokeStyle = `rgba(22, 105, 138, 0.5)`;
+        ctx.lineWidth = 4;
+        //loop through the data and draw
+        for (let i = 0; i < audioData.length; i++) {
+            ctx.fillStyle = `rgba(80, ${200 - i * 2}, 255, .8)`;
+            ctx.fillRect(i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
+            ctx.strokeRect(i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
+
+            for(let sprite of sprites){
+                if(i == sprite.wave){
+                    sprite.update(i * (barWidth + barSpacing), topSpacing + 256 - audioData[i]);
+                }
+            }   
         }
         ctx.restore();
+
+        for(let sprite of sprites){
+            if(sprite.y < 400)
+                sprite.draw(ctx);
+        }
+
+        let x = canvasWidth / 2;
+        let y = canvasHeight / 3;
+
+        /*ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = "black";
+        ctx.ellipse(100, 100, 10, 20, Math.PI / 2, 0, 2 * Math.PI)
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();*/
+
     }
 
     // 6 - bitmap manipulation

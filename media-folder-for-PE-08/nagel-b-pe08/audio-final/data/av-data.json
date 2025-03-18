@@ -1,0 +1,21 @@
+{
+    "title": "Audio Visualizer",
+    "tracks": {
+        "New Adventure Theme": {
+            "trackName": "New Adventure Theme",
+            "fileName": "./media/New Adventure Theme.mp3"
+        },
+        "Peanuts Theme": {
+            "trackName": "Peanuts Theme",
+            "fileName": "./media/Peanuts Theme.mp3"
+        },
+        "The Picard Song": {
+            "trackName": "The Picard Song",
+            "fileName": "./media/The Picard Song.mp3"
+        }
+    },
+    "filters": {
+        "bass": 35,
+        "treble": 15
+    }
+}
