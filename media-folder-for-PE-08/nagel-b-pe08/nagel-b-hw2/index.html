@@ -5,8 +5,8 @@
     <meta charset="utf-8" />
     <title>NOT A TITLE</title>
     <link href="./styles/default-styles.css" type="text/css" rel="stylesheet" />
+    <script type="module" src="./src/loader.js"></script>
 </head>
-
 <body>
     <main>
         <h1 id="title">TITLE</h1>
@@ -28,7 +28,7 @@
             </section>
 
             <section>
-                Volume: <input type="range" id="slider-volume" min="0" max="2" value="1" step="0.01">
+                Volume: <input type="range" id="slider-volume" min="0" max="2" value=".01" step="0.01">
                 <span id="label-volume">???</span>
             </section>
 
@@ -59,8 +59,7 @@
             <div id="data-list"></div>
         </div>
     </main>
-    <!-- <script type="module" src="src/main.js"></script> -->
-    <script src="./dist/bundle.js"></script>
+    <!-- <script src="./dist/bundle.js"></script> -->
 </body>
 
 </html>
