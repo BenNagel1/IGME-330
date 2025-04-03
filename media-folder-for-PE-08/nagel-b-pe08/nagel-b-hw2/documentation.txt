@@ -1,0 +1,24 @@
+Documentation:
+
+Audio Effects:
+    Bass and Treble were added as audio effects.
+    I created two biquad filters, set the values in the data json file, and then made them toggleable using a checkbox on the page.
+
+Sprite Class:
+    I created an ellipse class that is used to display two surfboards on the "waves" (visualizer bars).
+    The "update" method updates the board's x and y values according to the waves they are attached to.
+
+App Data:
+    In the data json file, I added the title of the project, the details of the tracks, and the values for the audio effects.
+    These are used for displaying text on the page, in the form of the page title, header, and song list, and adding bass/treble to the audio.
+
+Aesthetics:
+    I believe I deserve the full 15%.
+    I themed my audio visualizer around the beach/ocean and made additions that presented this to the user.
+    
+    Here is a list of the changes made to visually enhance my project:
+    - Gradient changed to mimic a sunset.
+    - Bars now look more like waves and have a gradient to them as well.
+    - The pulsing circle looks like a sun.
+    - Surf boards were added that follow the wave pattern.
+    - A bezier curve pops up to be the sandy beach when the waves do. It also fades away when the other visuals disappear.
