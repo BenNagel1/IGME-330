@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>NOT A TITLE</title>
+    <link href="./styles/default-styles.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--<script type="module" src="./src/loader.js"></script>-->
+</head>
+
+<body>
+    <div id="navbar">
+        <nav class="navbar has-background-dark has-shadow">
+            <!-- logo/brand -->
+            <div class="navbar-brand">
+                <a class="navbar-item" href="./index.html">
+                    <i class="fas fa-music has-text-light"></i>
+                </a>
+                <a class="navbar-burger has-text-light" id="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </a>
+            </div>
+
+            <div id="nav-links" class="navbar-menu has-background-dark">
+                <div class="navbar-start">
+                    <a class="navbar-item is-hoverable has-text-light" href="./index.html">Home</a>
+                    <a class="navbar-item is-hoverable has-text-light has-text-weight-bold"
+                        href="./app.html">Visualizer</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <main class="has-background-dark">
+        <h1 id="title" class="is-size-2 has-text-light has-text-weight-bold ml-4 pt-2">TITLE</h1>
+        <canvas width="800" height="400" class="pl-4 pt-4 pb-4"></canvas>
+        <div id="controls">
+            <section class="has-background-dark pr-5 pl-5 pt-3">
+
+                <div class="box has-background-primary-dark has-text-light is-flex is-align-items-center">
+                    <button id="btn-play" data-playing="no" class="button is-primary m-1"></button>
+                    <button id="btn-fullscreen" class="button is-primary m-1">Full Screen</button>
+
+
+                    <label id="label-track" class="pr-2 pl-4">Track:</label>
+                    <div class="select">
+                        <select id="select-track">
+                            <option value="media/New Adventure Theme.mp3" selected>New Adventure Theme</option>
+                            <option value="media/Peanuts Theme.mp3">Peanuts Theme</option>
+                            <option value="media/The Picard Song.mp3">The Picard Song</option>
+                        </select>
+                    </div>
+
+
+
+                    <label for="slider-volume" class="pr-2 pl-4">Volume:</label>
+                    <input type="range" id="slider-volume" min="0" max="2" value=".01" step="0.01">
+                    <span id="label-volume" class="pl-2">???</span>
+                </div>
+            </section>
+
+            <section id="section-options" class="has-background-dark pr-5 pl-5 pt-3">
+                <h2 class="is-size-4 has-text-light has-text-weight-bold mb-2">Options:</h2>
+                <div class="box has-background-primary-dark has-text-light is-flex is-align-items-center">
+                    <span class="pr-3"><input type="checkbox" id="cb-gradient"><label for="cb-gradient">Show
+                            Gradient</label></span>
+                    <span class="pr-3"><input type="checkbox" id="cb-bars"><label for="cb-bars">Show Bars</label></span>
+                    <span class="pr-3"><input type="checkbox" id="cb-circles"><label for="cb-circles">Show
+                            Circles</label></span>
+                    <span class="pr-3"><input type="checkbox" id="cb-noise"><label for="cb-noise">Show
+                            Noise</label></span>
+                    <span class="pr-3"><input type="checkbox" id="cb-invert"><label for="cb-invert">Invert
+                            Colors</label></span>
+                    <span class="pr-3"><input type="checkbox" id="cb-emboss"><label for="cb-emboss">Show
+                            Emboss</label></span>
+                    <br>
+                    <span class="pr-3"><input type="checkbox" id="cb-lowshelf"><label for="cb-lowshelf">Lowshelf Filter
+                            (Bass)</label></span>
+                    <span class="pr-3"><input type="checkbox" id="cb-highshelf"><label for="cb-highshelf">Highshelf
+                            Filter
+                            (Treble)</label></span>
+                    <br>
+                    <span class="pr-3"><input type="checkbox" id="cb-waveform"><label for="cb-waveform">Waveform
+                            Visualization</label></span>
+                </div>
+            </section>
+
+            <section id="section-options" class="has-background-dark pr-5 pl-5 pt-3 pb-4">
+                <h2 class="is-size-5 has-text-light has-text-weight-bold mb-1">Songs:</h2>
+                <div id="data-list" class="is-size-6 has-text-light pl-3"></div>
+            </section>
+        </div>
+    </main>
+    <script src="./dist/bundle.js"></script>
+</body>
+
+</html>
